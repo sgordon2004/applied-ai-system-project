@@ -64,7 +64,7 @@ class GeminiClient:
         Phase 2:
         Generate an answer using only the retrieved snippets.
 
-        snippets: list of (filename, text) tuples selected by DocuBot.retrieve
+        snippets: list of (filename, heading, text) tuples selected by DocuBot.retrieve
 
         The prompt:
         - Shows each snippet with its filename
@@ -76,8 +76,8 @@ class GeminiClient:
             return "I do not know based on the docs I have."
 
         context_blocks = []
-        for filename, text in snippets:
-            block = f"File: {filename}\n{text}\n"
+        for filename, heading, text in snippets:
+            block = f"File: {filename} - {heading}\n{text}\n"
             context_blocks.append(block)
 
         context = "\n\n".join(context_blocks)
