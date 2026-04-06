@@ -78,7 +78,7 @@ class DocuBot:
             if section_text:
                 chunks.append((filename, current_heading, section_text))
 
-            return chunks
+        return chunks
 
     def build_index(self, documents):
         """
@@ -107,6 +107,12 @@ class DocuBot:
     # Scoring and Retrieval (Phase 1)
     # -----------------------------------------------------------
 
+    def _stem(self, word):
+        for suffix in ("ation", "tion", "ing", "ed", "ion"):
+            if len(word) > len(suffix) + 3 and word.endswith(suffix):
+                return word[:-len(suffix)]
+        return word
+
     def score_document(self, query, text):
         """
         (Phase 1):
@@ -121,16 +127,16 @@ class DocuBot:
               "how", "what", "why", "when", "where", "does", "can", "will"}
         
         query_words = [
-            w.strip(string.punctuation)
+            self._stem(w.strip(string.punctuation))
             for w in query.lower().split()
             if w.strip(string.punctuation) not in STOP_WORDS]
-        text_words = set(w.strip(string.punctuation) for w in text.lower().split())
-        return sum(
-            1 for word in query_words
-            if any(word in tw or tw.startswith(word) for tw in text_words)
-        )
+        text_words = set()
+        for w in text.lower().split():
+            parts = w.strip(string.punctuation).replace("_", " ").split()
+            text_words.update(self._stem(p) for p in parts)
+        return sum(1 for word in query_words if word in text_words)
 
-    def retrieve(self, query, top_k=3, min_score=2):
+    def retrieve(self, query, top_k=3, min_score=1):
         """
         (Phase 1):
         Use the index and scoring function to select top_k relevant document snippets.

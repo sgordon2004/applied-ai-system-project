@@ -102,8 +102,10 @@ Developer question:
 Rules:
 - Use only the information in the snippets. Do not invent new functions,
   endpoints, or configuration values.
-- If the snippets are not enough to answer confidently, reply exactly:
-  "I do not know based on the docs I have."
+- If the snippets contain partial but relevant information, give that answer
+  and clearly note what context is missing.
+- Only reply exactly "I do not know based on the docs I have." if the snippets
+  have no relevant information at all.
 - When you do answer, briefly mention which files you relied on.
 """
 
