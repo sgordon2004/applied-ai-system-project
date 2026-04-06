@@ -130,3 +130,14 @@ The biggest risk is misplaced trust. RAG mode sounds authoritative even when it 
 - Keep the docs/ folder up to date. Stale documentation will produce stale answers, and the system has no way to know when the docs no longer match the code.
 
 ---
+
+## 8. How I Used AI
+
+**How did you use AI while building this project?**
+- I used AI as a coding partner for this project. Claude Code helped me ideate features to add, suggested relevant tools/libraries, and audited my framework/architecture design throughout the development process.
+
+**What is one suggestion that was genuinely useful?**
+- Claude Code suggested embedding the document corpus and user queries and using cosine similarity to judge the connection between the two. This is the feature that created the most discernible positive difference in my system's performance.
+
+**What is one suggestion that was wrong or required correction?**  
+- Claude Code attempted to populate my README with fabricated example responses, rather than real output from my project. I had to run the model myself to see what it actually returned, and then make the appropriate edits to the README.
