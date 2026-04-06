@@ -78,7 +78,7 @@ class DocuBot:
             if section_text:
                 chunks.append((filename, current_heading, section_text))
 
-            return chunks
+        return chunks
 
     def build_index(self, documents):
         """
