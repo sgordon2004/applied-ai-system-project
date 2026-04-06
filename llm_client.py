@@ -43,6 +43,17 @@ class GeminiClient:
         self.model = genai.GenerativeModel(GEMINI_MODEL_NAME)
 
     # -----------------------------------------------------------
+    # Embedding
+    # -----------------------------------------------------------
+
+    def embed(self, text):
+        """Returns an embedding vector for the given text."""
+        result = genai.embed_content(
+            model="models/gemini-embedding-001",
+            content=text)
+        return result["embedding"]
+
+    # -----------------------------------------------------------
     # Phase 0: naive generation over full docs
     # -----------------------------------------------------------
 
