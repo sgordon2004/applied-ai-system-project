@@ -85,8 +85,8 @@ RAG is clearly the best option when retrieval works well. The answers are accura
 
 Failure case 1: Query about payment processing.
 - Question: "Is there any mention of payment processing in these docs?"
-- What the system did: In RAG mode, it retrieved vaguely related chunks about API endpoints and returned a partial answer implying payment might be handled somewhere.
-- What should have happened: The docs have no payment content at all. The system should have returned "I do not know based on the docs I have."
+- What the system did: In RAG mode, it retrieved chunks from SETUP.md, API_REFERENCE.md, and DATABASE.md, then returned a response confirming there is no direct mention of payment processing while briefly describing what each file does cover.
+- What should have happened: This is actually reasonable behavior. The model correctly reported the absence of payment content and cited its sources rather than guessing. A stricter prompt would produce a flat refusal, but the current behavior is more informative and still honest.
 
 Failure case 2: Keyword retrieval missing semantic matches.
 - Question: "What credentials do I need to run the app?"
