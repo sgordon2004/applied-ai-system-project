@@ -9,6 +9,7 @@ Core DocuBot class responsible for:
 
 import os
 import glob
+import math
 import string
 
 class DocuBot:
@@ -28,6 +29,9 @@ class DocuBot:
 
         # Build a retrieval index (implemented in Phase 1)
         self.index = self.build_index(self.documents)
+
+        # Pre-compute embeddings for all chunks if an LLM client is available
+        self.chunk_embeddings = self._build_embedding_index() if llm_client else []
 
     # -----------------------------------------------------------
     # Document Loading
@@ -107,6 +111,24 @@ class DocuBot:
     # Scoring and Retrieval (Phase 1)
     # -----------------------------------------------------------
 
+    def _build_embedding_index(self):
+        """Pre-computes and caches an embedding vector for every chunk."""
+        embeddings = []
+        for _, heading, text in self.chunks:
+            emb = self.llm_client.embed(heading + " " + text)
+            embeddings.append(emb)
+
+        print("Embedding index ready.\n")
+        return embeddings
+
+    def _cosine_similarity(self, a, b):
+        dot = sum(x * y for x, y in zip(a, b))
+        norm_a = math.sqrt(sum(x * x for x in a))
+        norm_b = math.sqrt(sum(x * x for x in b))
+        if norm_a == 0 or norm_b == 0:
+            return 0.0
+        return dot / (norm_a * norm_b)
+
     def _stem(self, word):
         for suffix in ("ation", "tion", "ing", "ed", "ion"):
             if len(word) > len(suffix) + 3 and word.endswith(suffix):
@@ -143,12 +165,19 @@ class DocuBot:
 
         Return a list of (filename, text) sorted by score descending.
         """
-        results = []
-        for filename, heading, text in self.chunks:
-            score = self.score_document(query, heading + " " + text)
-            if score >= min_score:
-                results.append((filename, heading, text, score))
-        
+        if self.chunk_embeddings:
+            query_emb = self.llm_client.embed(query)
+            results = [
+                (filename, heading, text, self._cosine_similarity(query_emb, chunk_emb))
+                for (filename, heading, text), chunk_emb in zip(self.chunks, self.chunk_embeddings)
+            ]
+        else:
+            results = [
+                (filename, heading, text, self.score_document(query, heading + " " + text))
+                for filename, heading, text in self.chunks
+                if self.score_document(query, heading + " " + text) >= min_score
+            ]
+
         results.sort(key=lambda x: x[3], reverse=True)
         return [(filename, heading, text) for filename, heading, text, _ in results[:top_k]]
 
