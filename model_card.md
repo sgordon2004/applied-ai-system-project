@@ -64,7 +64,7 @@ Run the **same set of queries** in all three modes. Fill in the table with short
 
 | Query | Naive LLM: helpful or harmful? | Retrieval only: helpful or harmful? | RAG: helpful or harmful? | Notes |
 |------|---------------------------------|--------------------------------------|---------------------------|-------|
-| Where is the auth token generated? | Helpful — gave a plausible answer, but invented a function name not in our docs | Helpful — returned the AUTH.md section directly | Helpful — clean answer citing AUTH.md | Naive LLM hallucinated a specific file path |
+| What environment variables are required for authentication? | Helpful — gave a plausible answer, but listed generic variables not specific to this project | Helpful — returned the AUTH.md environment variables section | Helpful — correctly identified AUTH_SECRET_KEY and TOKEN_LIFETIME_SECONDS, cited AUTH.md | RAG gave the most precise project-specific answer |
 | How do I connect to the database? | Helpful — gave generic SQL connection advice unrelated to this project | Helpful — returned the DATABASE.md section | Helpful — accurate, grounded in DATABASE.md | Naive LLM was confidently wrong about the actual setup |
 | Which endpoint lists all users? | Helpful — correctly guessed GET /api/users, but only because that is a common REST convention | Helpful — returned the right API_REFERENCE.md chunk | Helpful — cited the exact endpoint and required auth header | RAG was the most precise here |
 | How does a client refresh an access token? | Helpful on the surface, but described a JWT flow we do not actually use | Helpful — retrieved AUTH.md refresh section | Helpful — described the POST /api/refresh endpoint correctly | Naive LLM gave a textbook answer, not a project-specific one |

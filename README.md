@@ -112,10 +112,15 @@ A token can be refreshed using POST /api/refresh.
 Question: What environment variables are required for authentication?
 
 Answer:
-Based on the documentation in AUTH.md and SETUP.md, two environment variables
-are required: AUTH_SECRET_KEY, which is used to sign access tokens, and
-DATABASE_URL, which is required to run the application. AUTH_SECRET_KEY is
-specifically called out as a dependency of the token generation process.
+Based on the provided documentation, the authentication system depends on
+these two environment variables:
+
+- AUTH_SECRET_KEY
+- TOKEN_LIFETIME_SECONDS
+
+Both variables must be configured before starting the server.
+
+(Information from AUTH.md - Environment Variables)
 ```
 
 **Mode 3 — RAG (out-of-scope query)**
